@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import Container from '../../components/Container';
-import { Loading } from './styles';
+import { Loading, Owner } from './styles';
 
 class Repository extends Component {
     static propTypes = {
@@ -44,14 +44,21 @@ class Repository extends Component {
 
 
     render() {
-        const { repository, issues, loading } = this.setState;
+        const { repository, issues, loading } = this.state;
 
         if (loading) {
             return <Loading>Carregando...</Loading>
         }
 
         return (
-            <Container>Repository</Container>
+            <Container>
+                <Owner>
+                    <Link to="/">Página inicial</Link>
+                    <img src={repository.owner.avatar_url} alt={repository.owner.login}></img>
+                    <h1>{repository.name}</h1>
+                    <p>{repository.description}</p>
+                </Owner>
+            </Container>
         );
     }
 }
