@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import api from '../../services/api';
+import Container from '../../components/Container';
+import { Loading } from './styles';
 
 class Repository extends Component {
     static propTypes = {
@@ -19,7 +21,7 @@ class Repository extends Component {
     };
 
     async componentDidMount() {
-        const match = this.props;
+        const { match } = this.props;
 
         const repoName = decodeURIComponent(match.params.repository);
 
@@ -44,8 +46,12 @@ class Repository extends Component {
     render() {
         const { repository, issues, loading } = this.setState;
 
+        if (loading) {
+            return <Loading>Carregando...</Loading>
+        }
+
         return (
-            <h1>Repository</h1>
+            <Container>Repository</Container>
         );
     }
 }
