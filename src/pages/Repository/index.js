@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 import api from '../../services/api';
 import Container from '../../components/Container';
 import { IssueList, Loading, Owner } from './styles';
@@ -26,20 +28,34 @@ class Repository extends Component {
         const repoName = decodeURIComponent(match.params.repository);
 
         const [repository, issues] = await Promise.all([
-            await api.get(`/repos/${repoName}`),
+            await api.get(`/repos/${repoName}`).catch((error)=>{
+                    return error.response.status;
+                }),
             await api.get(`/repos/${repoName}/issues`, {
                 params: {
                     state: 'open',
                     per_page: 5
                 }
+            }).catch((error)=>{
+                return error.response.status;
             })
         ]);
 
-        this.setState({
-            repository: repository.data,
-            issues: issues.data,
-            loading: false
-        })
+        if (repository !== 404) {
+            this.setState({
+                repository: repository.data,
+                issues: issues.data,
+                loading: false
+            })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Não funcionou...',
+                text: 'Repositório não encontrado ou não pertece ao owner selecionado!',
+            }).then(function() {
+                window.location = "/";
+            });
+        }
     }
 
 

@@ -1,0 +1,22 @@
+{
+  "name": "List Repositories",
+  "short_name": "List-Repositories",
+  "theme_color": "#889de1",
+  "background_color": "#889de1",
+  "display": "standalone",
+  "scope": "/",
+  "id": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

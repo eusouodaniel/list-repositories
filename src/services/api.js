@@ -1,7 +1,8 @@
 import axios from 'axios';
+import env from '../env.js';
 
 const api = axios.create({
-    baseURL: 'https://api.github.com'
+    baseURL: env.baseUrl
 });
 
 export default api;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import api from '../../services/api';
 import Container from '../../components/Container';
@@ -39,17 +40,34 @@ class Main extends Component {
         this.setState({ loading: true });
 
         const { newRepo, repositories } = this.state;
-        const response = await api.get(`/repos/${newRepo}`);
+        const response = await api.get(`/repos/${newRepo}`)
+                                    .catch((error)=>{
+                                        return error.response.status;
+                                    });
 
-        const data = {
-            name: response.data.full_name
-        };
+        if (response !== 404) {
+            const data = {
+                name: response.data.full_name
+            };
 
-        this.setState({
-            repositories: [...repositories, data],
-            newRepo: '',
-            loading: false
-        });
+            this.setState({
+                repositories: [...repositories, data],
+                newRepo: '',
+                loading: false
+            });
+        } else {
+            this.setState({
+                repositories: [...repositories],
+                newRepo: '',
+                loading: false
+            });
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Não funcionou...',
+                text: 'Repositório não encontrado ou não pertece ao owner selecionado!',
+            })
+        }
     }
 
     render() {
@@ -66,6 +84,7 @@ class Main extends Component {
                         type="text"
                         placeholder="Adicionar repositório"
                         value={newRepo}
+                        required={true}
                         onChange={this.handleInputChange}
                     />
                     <SubmitButton loading={loading}>
